@@ -1,4 +1,3 @@
-package practice;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ public class GridGame  extends JFrame implements ActionListener
     JButton jb[][];
     JPanel jp;
     int pos=15;
-    GridGame()
+    GridGame()// To initialize variable and create a random board to play on
     {
         x=3;
         y=3;
@@ -54,7 +53,7 @@ public class GridGame  extends JFrame implements ActionListener
         add(jp);
         setVisible(true);
     }
-    public JButton button(int num)
+    public JButton button(int num)// code for clikable button
     {
         JButton jb=new JButton(Integer.toString(num));
         jb.setSize(new Dimension(100,100));
@@ -64,7 +63,7 @@ public class GridGame  extends JFrame implements ActionListener
         jb.addActionListener(this);
         return jb;
     }
-    public JButton buttonEmpty()
+    public JButton buttonEmpty()//code for empty button
     {
         JButton jb=new JButton( );
         jb.setSize(new Dimension(100,100));
@@ -72,7 +71,7 @@ public class GridGame  extends JFrame implements ActionListener
         jb.addActionListener(this);
         return jb;
     }
-    public void actionPerformed(ActionEvent ae)
+    public void actionPerformed(ActionEvent ae)//to determine the action performed on pressing the buttons
     {
         JButton jt=(JButton)ae.getSource();
         String num=jt.getLabel();
