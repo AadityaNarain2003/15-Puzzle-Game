@@ -1,4 +1,4 @@
-package practice;
+package gamesfinal;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.Collections;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
-public class GridGame  extends JFrame implements ActionListener
+public class GridGame  extends JFrame implements ActionListener,KeyListener
 {
     int x,y;
     JButton jb[][];
@@ -24,9 +24,12 @@ public class GridGame  extends JFrame implements ActionListener
         setName("GridGame");//setting the frame
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setResizable(false);
+        setFocusable(true);
         setSize(new Dimension(415,528));
         setLayout(null);
-        
+        this.setLocation(100, 100);
+        this.addKeyListener(this);
+ 
         jmb=new JMenuBar();//setting the menubar
         jmb.setBounds(0, 0, 415, 41);
         jmb.setBackground(new Color(41,64,82));
@@ -38,6 +41,7 @@ public class GridGame  extends JFrame implements ActionListener
         restart.addActionListener((ActionEvent ae) -> {setNum(jb,ar,jp);
         });
         restart.setBounds(10,5,120,25);
+        restart.setFocusable(false);
         jmb.add(restart);
         
         t=new Timer(true);//to set the timer
@@ -77,14 +81,16 @@ public class GridGame  extends JFrame implements ActionListener
         jb.setForeground(new Color(248,228,204));
         jb.setFont(new Font("Ariel",Font.BOLD,40));
         jb.addActionListener(this);
+        jb.setFocusable(false);
         jb.setBorder(BorderFactory.createLineBorder(Color.black));
         return jb;
     }
     public JButton buttonEmpty()
     {
-        JButton jb=new JButton( );
+        JButton jb=new JButton("E" );
         jb.setSize(new Dimension(100,100));
         jb.setBackground(Color.WHITE);
+        jb.setFocusable(false);
         jb.addActionListener(this);
         return jb;
     }
@@ -125,14 +131,14 @@ public class GridGame  extends JFrame implements ActionListener
         JButton empty=jb[x][y];
         String num2=empty.getLabel();
         Point emptyp=empty.getLocation();
+        
         //need to make cases for all 4 sides
         //this is for left
-        System.out.println("SOURCE:"+p.x+":"+p.y);
-        System.out.println("EMPTY:"+emptyp.x+":"+emptyp.y);
         if(emptyp.x-p.x<=100 && emptyp.x>p.x && p.y==emptyp.y)//p=210,empty=300
         {
             jt.setText(num2);
             jt.setBackground(Color.WHITE);
+            jt.setFocusable(false);
             
             empty.setText(num);
             empty.setBackground(new Color(21,52,80));
@@ -140,6 +146,7 @@ public class GridGame  extends JFrame implements ActionListener
             empty.setFont(new Font("Ariel",Font.BOLD,40));
             empty.setBorder(BorderFactory.createLineBorder(Color.black));
             empty.addActionListener(this);
+            
             --this.y;
         }
         //for right
@@ -147,6 +154,7 @@ public class GridGame  extends JFrame implements ActionListener
         {
             jt.setText(num2);
             jt.setBackground(Color.WHITE);
+            jt.setFocusable(false);
             
             empty.setText(num);
             empty.setBackground(new Color(21,52,80));
@@ -161,6 +169,7 @@ public class GridGame  extends JFrame implements ActionListener
         {
             jt.setText(num2);
             jt.setBackground(Color.WHITE);
+            jt.setFocusable(false);
             
             empty.setText(num);
             empty.setBackground(new Color(21,52,80));
@@ -175,6 +184,7 @@ public class GridGame  extends JFrame implements ActionListener
         {
             jt.setText(num2);
             jt.setBackground(Color.WHITE);
+            jt.setFocusable(false);
             
             empty.setText(num);
             empty.setBackground(new Color(21,52,80));
@@ -187,8 +197,145 @@ public class GridGame  extends JFrame implements ActionListener
         //to check if the game is finished or not
         if(isSolved())
         {
-            JOptionPane.showMessageDialog(null, "You Win The Game.");
+            final int m=t.min;
+            final int s=t.sec;
+            JOptionPane.showMessageDialog(null, "You Win The Game.\n Completed in "+m+" minutes "+s+" seconds");
             setNum(jb,ar,jp);
+            t.min=0;
+            t.sec=0;
+            
+        }
+    }
+    public void keyPressed(KeyEvent ae)// to play with the arrow key
+    {
+        int key=ae.getKeyCode();
+        JButton empty=jb[x][y];
+        Point emptyp=empty.getLocation();
+        String num2=empty.getLabel();
+        switch(key)
+        {
+            case KeyEvent.VK_UP :
+            {
+                try
+                {
+                    System.out.println("PRESSED up");
+                    JButton jt=jb[x+1][y];
+                    Point p=jt.getLocation();
+                    String num=jt.getLabel();
+                    if(p.y-emptyp.y<=112 && p.y>emptyp.y && p.x==emptyp.x)//p=210,empty=300
+                    {
+                        jt.setText(num2);
+                        jt.setBackground(Color.WHITE);
+            
+                        empty.setText(num);
+                        empty.setBackground(new Color(21,52,80));
+                        empty.setForeground(new Color(248,228,204));
+                        empty.setFont(new Font("Ariel",Font.BOLD,40));
+                        empty.addActionListener(this);
+                        empty.setBorder(BorderFactory.createLineBorder(Color.black));
+                        ++this.x;
+                    }
+                }
+                catch(Exception e)
+                {
+                    //do nothing
+                }
+                break;                
+            }
+            case KeyEvent.VK_DOWN:
+            {
+                try
+                {
+                    
+                    JButton jt=jb[x-1][y];
+                    Point p=jt.getLocation();
+                    String num=jt.getLabel();
+                    if(emptyp.y-p.y<=112 && emptyp.y>p.y && p.x==emptyp.x)
+                    {
+                        jt.setText(num2);
+                        jt.setBackground(Color.WHITE);
+                        empty.setText(num);
+                        empty.setBackground(new Color(21,52,80));
+                        empty.setForeground(new Color(248,228,204));
+                        empty.setFont(new Font("Ariel",Font.BOLD,40));
+                        empty.addActionListener(this);
+                        empty.setBorder(BorderFactory.createLineBorder(Color.black));
+                        --this.x;
+                    }
+                }
+                catch(Exception e)
+                {
+                   //do nothing
+                }
+            }
+            case KeyEvent.VK_LEFT:
+            {
+                try
+                {
+                    
+                    JButton jt=jb[x][y+1];
+                    Point p=jt.getLocation();
+                    String num=jt.getLabel();
+                    if(p.x-emptyp.x<=100 && p.x>emptyp.x && p.y==emptyp.y)
+                    {
+                        jt.setText(num2);
+                        jt.setBackground(Color.WHITE);
+            
+                        empty.setText(num);
+                        empty.setBackground(new Color(21,52,80));
+                        empty.setForeground(new Color(248,228,204));
+                        empty.setFont(new Font("Ariel",Font.BOLD,40));
+                        empty.addActionListener(this);
+                        empty.setBorder(BorderFactory.createLineBorder(Color.black));
+                        ++this.y;
+                    }
+                }
+                catch(Exception e)
+                {
+                    //do nothing
+                }
+                break;
+            }
+            case KeyEvent.VK_RIGHT:
+            {
+                try
+                {
+                    
+                    JButton jt=jb[x][y-1];
+                    Point p=jt.getLocation();
+                    String num=jt.getLabel();
+                    if(emptyp.x-p.x<=100 && emptyp.x>p.x && p.y==emptyp.y)//p=210,empty=300
+                    {
+                        jt.setText(num2);
+                        jt.setBackground(Color.WHITE);
+                        
+                        empty.setText(num);
+                        empty.setBackground(new Color(21,52,80));
+                        empty.setForeground(new Color(248,228,204));
+                        empty.setFont(new Font("Ariel",Font.BOLD,40));
+                        empty.setBorder(BorderFactory.createLineBorder(Color.black));
+                        empty.addActionListener(this);
+                        --this.y;
+                    }
+                }
+                catch(Exception e)
+                {
+                   //do nothing
+                }
+            }
+            default:
+            {
+                break;
+            }
+        }
+        if(isSolved())
+        {
+            final int m=t.min;
+            final int s=t.sec;
+            JOptionPane.showMessageDialog(null, "You Win The Game.\n Completed in "+m+" minutes "+s+" seconds");
+            setNum(jb,ar,jp);
+            t.min=0;
+            t.sec=0;    
         }
     }
     public boolean isSolved()
@@ -201,8 +348,6 @@ public class GridGame  extends JFrame implements ActionListener
             {
                 if(i==3 && j==3)
                 {
-                    t.min=0;
-                    t.sec=0;
                     return true;
                 }
                 int num=i*4+j+1;
@@ -221,8 +366,6 @@ public class GridGame  extends JFrame implements ActionListener
                 }
             }
         }
-        t.min=0;
-        t.sec=0;
         return true;
     }
     public static void main(String args[])
@@ -233,6 +376,15 @@ public class GridGame  extends JFrame implements ActionListener
                 GridGame gg=new GridGame();
             }
         });
+    }
+
+    @Override
+    public void keyTyped(KeyEvent arg0) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    @Override
+    public void keyReleased(KeyEvent arg0) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
 class Timer implements Runnable
@@ -258,7 +410,6 @@ class Timer implements Runnable
                 Logger.getLogger(Timer.class.getName()).log(Level.SEVERE, null, ex);
             }
             sec++;
-            System.out.println(sec);
             if(sec>=60)
             {
                 sec=0;
